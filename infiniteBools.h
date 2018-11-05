@@ -17,13 +17,20 @@ class InfiniteBools;
 // linked-list node helper-class
 class LinkedListNode {
 private:
-    bool value; // the value at that position
+    // the boolean value for this linked list node
+    bool value;
+    // the array index that this node represents
     int index;
-    LinkedListNode* next; // next-pointer
+    // the next pointer for this node
+    LinkedListNode* next;
 public:
-    LinkedListNode(bool value, LinkedListNode* next, int index); // constructor
+    // no argument constructor
+    LinkedListNode();
+    // 3 argument constructor for initializing sections of the infinite bools list
+    LinkedListNode(bool value, LinkedListNode* next, int index);
     
-    friend class InfiniteBools; // allow the InfiniteBools class private access
+    // allow the InfiniteBools class private access
+    friend class InfiniteBools;
     friend std::ostream& operator <<(std::ostream& os, InfiniteBools const& obj);
 };
 
