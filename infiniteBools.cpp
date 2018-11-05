@@ -12,9 +12,12 @@ using namespace std;
 
 /**
  * constructor for linked list node
+ * 
+ * @param value the boolean value associated with this node
+ * @param next the next linked list node 
+ * @param index the associated index in the infinite bools list that this node occupies
  */
 LinkedListNode::LinkedListNode(bool value, LinkedListNode* next, int index) : value(value), next(next), index(index) {
-    refCount = 1;
 }
 
 /**
@@ -28,6 +31,10 @@ negHeader(NULL), nonNegHeader(NULL), defaultNegValue(false), defaultNonNegValue(
 
 /**
  * 3-argument constructor
+ * 
+ * @param n the default value fro negative indices
+ * @param z the default value for the zero index
+ * @param p the default value for positive indices
  */
 InfiniteBools::InfiniteBools(bool n, bool z, bool p):
 negHeader(NULL), nonNegHeader(NULL), defaultNegValue(n), defaultNonNegValue(p) {
@@ -35,7 +42,9 @@ negHeader(NULL), nonNegHeader(NULL), defaultNegValue(n), defaultNonNegValue(p) {
 }
 
 /**
+ * copy constructor
  * 
+ * @param list the InfiniteBools object to copy
  */
 InfiniteBools::InfiniteBools(const InfiniteBools& list):
 defaultNegValue(list.defaultNegValue), defaultNonNegValue(list.defaultNonNegValue) {
@@ -76,7 +85,7 @@ defaultNegValue(list.defaultNegValue), defaultNonNegValue(list.defaultNonNegValu
 }
 
 /**
- * 
+ * class destructor
  */
 InfiniteBools::~InfiniteBools() {
     // delete our linked lists
@@ -99,6 +108,8 @@ InfiniteBools::~InfiniteBools() {
 
 /**
  * array index reference operation
+ * 
+ * @param idx the index of the boolean value to retrieve
  */
 bool& InfiniteBools::operator[](int idx) {
 
@@ -170,7 +181,10 @@ bool& InfiniteBools::operator[](int idx) {
 }
 
 /**
- * output operator
+ * output operator override
+ * 
+ * @param os the output stream
+ * @param obj the infinite bools object to output
  */
 std::ostream& operator <<(std::ostream& os, InfiniteBools const& obj) {
 

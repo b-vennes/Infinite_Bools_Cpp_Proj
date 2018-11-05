@@ -20,7 +20,6 @@ private:
     bool value; // the value at that position
     int index;
     LinkedListNode* next; // next-pointer
-    int refCount; // number of references to this linked list
 public:
     LinkedListNode(bool value, LinkedListNode* next, int index); // constructor
     
