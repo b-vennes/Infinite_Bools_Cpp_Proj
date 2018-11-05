@@ -24,11 +24,9 @@ int main(int argc, const char * argv[]) {
     InfiniteBools arr;
 
     // set some values to be true, and a couple to be false
-    arr[3] = true;
-    arr[6] = true;
-    arr[-10] = false;
-    arr[12] = false;
-    arr[-5] = true;
+    arr[-4] = true;
+    arr[8] = true;
+    arr[12] = true;
 
     /*
     // print the contents before modifying
@@ -38,18 +36,14 @@ int main(int argc, const char * argv[]) {
             cout << "found flag at " << i << endl;
         }
     }
-    
+    */
     InfiniteBools arr2(arr);
-    
-    arr2[2] = true;
     
     // print the arrays
     cout << "========= original array ========" << endl;
     cout << arr << endl;
     cout << "========= copy of array ========" << endl;
     cout << arr2 << endl;
-
-    */
     
     // return a "success" exit status
     return 0;

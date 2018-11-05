@@ -22,7 +22,7 @@ private:
     LinkedListNode* next; // next-pointer
     int refCount; // number of references to this linked list
 public:
-    LinkedListNode(bool value, LinkedListNode* next); // constructor
+    LinkedListNode(bool value, LinkedListNode* next, int index); // constructor
     
     friend class InfiniteBools; // allow the InfiniteBools class private access
     friend std::ostream& operator <<(std::ostream& os, InfiniteBools const& obj);
@@ -39,11 +39,11 @@ private:
     // default values
     bool defaultNegValue; // default negative-index value
     bool defaultNonNegValue; // default non-negative-index value
-    bool zeroValue; // the value of the 0 index
     
 public:
     InfiniteBools(); // no-argument constructor
     InfiniteBools(bool n, bool z, bool p); // 3-argument constructor
+    InfiniteBools(const InfiniteBools&); // copy constructor
 
     bool& operator[](int idx); // "array-reference" operator
     
