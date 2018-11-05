@@ -44,6 +44,7 @@ public:
     InfiniteBools(); // no-argument constructor
     InfiniteBools(bool n, bool z, bool p); // 3-argument constructor
     InfiniteBools(const InfiniteBools&); // copy constructor
+    ~InfiniteBools(); // destructor
 
     bool& operator[](int idx); // "array-reference" operator
     
