@@ -44,6 +44,25 @@ int main(int argc, const char * argv[]) {
     cout << arr << endl;
     cout << "========= copy of array ========" << endl;
     cout << arr2 << endl;
+
+    InfiniteBools arr3 = arr;
+
+    arr3[-4] = false;
+
+    for (int i = 0; i < 100000000; i++) {
+        InfiniteBools* newList = new InfiniteBools();
+        (*newList)[1] = true;
+        (*newList)[-10] = true;
+        (*newList)[15] = true;
+        delete newList;
+    }
+
+    if (arr[-4]) {
+        cout << "value is true\n";
+    }
+    else {
+        cout << "value is false\n";
+    }
     
     // return a "success" exit status
     return 0;

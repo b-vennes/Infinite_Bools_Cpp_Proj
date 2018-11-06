@@ -325,5 +325,3 @@ std::ostream& operator <<(std::ostream& os, InfiniteBools const& obj) {
     os << output;
     return os;
 }
-
-
