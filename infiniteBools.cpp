@@ -25,8 +25,8 @@ LinkedListNode::LinkedListNode(bool value, LinkedListNode* next, int index) : va
  */
 InfiniteBools::InfiniteBools():
 negHeader(NULL), nonNegHeader(NULL), defaultNegValue(false), defaultNonNegValue(false) {
+    // create a node at index 0 with a false default value
     nonNegHeader = new LinkedListNode(false, NULL, 0);
-    //cout << "Created new positive header for the list\n";
 }
 
 /**
@@ -38,6 +38,7 @@ negHeader(NULL), nonNegHeader(NULL), defaultNegValue(false), defaultNonNegValue(
  */
 InfiniteBools::InfiniteBools(bool n, bool z, bool p):
 negHeader(NULL), nonNegHeader(NULL), defaultNegValue(n), defaultNonNegValue(p) {
+    // create a node at index 0 with the given value (z) of boolean
     nonNegHeader = new LinkedListNode(z, NULL, 0);
 }
 
@@ -49,15 +50,17 @@ negHeader(NULL), nonNegHeader(NULL), defaultNegValue(n), defaultNonNegValue(p) {
 InfiniteBools::InfiniteBools(const InfiniteBools& list):
 defaultNegValue(list.defaultNegValue), defaultNonNegValue(list.defaultNonNegValue) {
 
-    // copy nodes from neg list
+    // copy nodes from negative list
     if (list.negHeader != NULL) {
 
         // create a new negative header
         negHeader = new LinkedListNode(list.negHeader->value, NULL, list.negHeader->index);
 
+        // keep track of current node in new object to mirror current node in object being copied
         LinkedListNode* copyFromNode = list.negHeader;
         LinkedListNode* copyToNode = negHeader;
 
+        // create a new node with the next pointer's values, while the next node is not empty
         while (copyFromNode->next != NULL) {
             LinkedListNode* nextNode = new LinkedListNode(copyFromNode->next->value, NULL, copyFromNode->next->index);
             copyToNode->next = nextNode;
@@ -67,13 +70,17 @@ defaultNegValue(list.defaultNegValue), defaultNonNegValue(list.defaultNonNegValu
         }
     }
 
-    // copy nodes from pos list
+    // copy nodes from positive list
     if (list.nonNegHeader != NULL) {
+
+        // create a new positives header
         nonNegHeader = new LinkedListNode(list.nonNegHeader->value, NULL, list.nonNegHeader->index);
 
+        // create a new node with the next pointer's values, while the next node is not empty
         LinkedListNode* copyFromNode = list.nonNegHeader;
         LinkedListNode* copyToNode = nonNegHeader;
 
+        // create a new node with the next pointer's values, while the next node is not empty, as done with the negatives list
         while (copyFromNode->next != NULL) {
             LinkedListNode* nextNode = new LinkedListNode(copyFromNode->next->value, NULL, copyFromNode->next->index);
             copyToNode->next = nextNode;
@@ -85,20 +92,24 @@ defaultNegValue(list.defaultNegValue), defaultNonNegValue(list.defaultNonNegValu
 }
 
 /**
- * class destructor
+ * class destructor for InfiniteBools array
  */
 InfiniteBools::~InfiniteBools() {
-    // delete our linked lists
+
+    // delete negatives list
     LinkedListNode* currNode = negHeader;
 
+    // delete each node one by one
     while (currNode != NULL) {
         LinkedListNode* nextNode = currNode->next;
         delete currNode;
         currNode = nextNode;
     }
 
+    // delete positives list
     currNode = nonNegHeader;
 
+    // delete each node one by one
     while (currNode != NULL) {
         LinkedListNode* nextNode = currNode->next;
         delete currNode;
@@ -123,7 +134,7 @@ bool& InfiniteBools::operator[](int idx) {
         currNode = negHeader;
     }
 
-    // linked list is empty
+    // linked list is empty, will need to create a new header
     if (currNode == NULL) {
         if (idx < 0) {
             negHeader = new LinkedListNode(defaultNegValue, NULL, idx);
@@ -136,42 +147,53 @@ bool& InfiniteBools::operator[](int idx) {
         
     }
 
+    // linked list is not empty, need to traverse list to find if the node already exists or needs to be created
     while (currNode -> next != NULL) {
-        // if we find the node for this index
+
+        // found a node with the index already created
         if (currNode->index == idx) {
-            // return the boolean reference
             return currNode->value;
         }
-        // if our index is bigger than this node and smaller than the next
-        else if (abs(currNode->index) <= abs(idx) && abs(currNode->next->index) > abs(idx)) {
-            // create a new node between this one and the next one
-            // and return the node's boolean reference
 
-            // positive index
+        // need to create anew node between two nodes in the linked list
+        else if (abs(currNode->index) <= abs(idx) && abs(currNode->next->index) > abs(idx)) {
+
+            // positive index, use default positive value
             if (idx >= 0) {
                 LinkedListNode* newPosNode = new LinkedListNode(defaultNonNegValue, currNode->next, idx);
                 currNode->next = newPosNode;
                 return newPosNode->value;
             }
+            
+            // negative index, use default negative value
             else {
                 LinkedListNode* newNegNode = new LinkedListNode(defaultNegValue, currNode->next, idx);
                 currNode->next = newNegNode;
                 return newNegNode->value;
             }
         }
+
         currNode = currNode->next;
     }
 
-    // reach this point if we have hit the last node and need to append a new one to the end
+    // reached end of list, so a new node must be appended to the end, or it is the last node in the list
+
+    // last node in list is the one we are searching for
     if (idx == currNode->index) {
         return currNode->value;
     }
+
+    // need to append a new node to the end of the list
     else {
+
+        // positive index, use default positive value
         if (idx >= 0) {
             LinkedListNode* lastPosNode = new LinkedListNode(defaultNonNegValue, NULL, idx);
             currNode->next = lastPosNode;
             return lastPosNode->value;
         }
+
+        // negative index, use default negative value
         else {
             LinkedListNode* lastNegNode = new LinkedListNode(defaultNegValue, NULL, idx);
             currNode->next = lastNegNode;
@@ -188,14 +210,18 @@ bool& InfiniteBools::operator[](int idx) {
  */
 std::ostream& operator <<(std::ostream& os, InfiniteBools const& obj) {
 
+    // start by adding all the interesting booleans from the negative list
     LinkedListNode* curr = obj.negHeader;
 
-    // print off all negative values
     string negOutput = "";
+
+    // the previous important index node
     int lastIndex = -1;
+
+    // the current important index node
     int currIndex;
 
-    // determine what the default negative output is
+    // determine what the default negative value is
     char defNegOut;
     if (obj.defaultNegValue) {
         defNegOut = 'T';
@@ -204,12 +230,14 @@ std::ostream& operator <<(std::ostream& os, InfiniteBools const& obj) {
         defNegOut = 'F';
     }
 
+    // create a string of formatted boolean values associated with negative indices
     while(curr != NULL)
     {
         // only care to print node if it is different than default
         if (curr->value != obj.defaultNegValue) {
             currIndex = curr->index;
 
+            // fill in default indices between the last interesting node and this one
             for (int i = currIndex; i < lastIndex; i++) {
                 negOutput = defNegOut + negOutput;
             }
@@ -223,14 +251,17 @@ std::ostream& operator <<(std::ostream& os, InfiniteBools const& obj) {
 
             lastIndex = curr->index;
         }
+
         curr = curr->next;
     }
 
+    // the output associated with the zero index of our list
     string zeroOutput = "";
 
+    // zero index is always header node in positive list
     curr = obj.nonNegHeader;
 
-    // get 0 value
+    // get 0 index value
     if (obj.nonNegHeader->value) {
         zeroOutput = 'T';
     }
@@ -252,12 +283,14 @@ std::ostream& operator <<(std::ostream& os, InfiniteBools const& obj) {
         defPosOut = 'F';
     }
 
-    // determine the positive output
+    // determine the positive output string
     while (curr != NULL) {
 
+        // only care about non-default nodes
         if (curr->value != obj.defaultNonNegValue) {
             currIndex = curr->index;
 
+            // fill in default values between the last important nodes
             for (int i = lastIndex + 1; i < currIndex; i++) {
                 posOutput += defPosOut;
             }
@@ -301,25 +334,31 @@ std::ostream& operator <<(std::ostream& os, InfiniteBools const& obj) {
         }
     }
 
-    // make sure end of negative array is formatted correctly
+    // format the edges of each string correctly
+
     if (negOutput.length() > 0) {
+
+        // character on left side of the negative output string
         char stringStart = negOutput[0];
 
+        // if the left end of the negative string is not the default, we need to add the default boolean letter
         if (stringStart != defNegOut) {
             negOutput = defNegOut + negOutput;
         } 
     }
 
-    // make sure end of positive array is formatted correctly
     if (posOutput.length() > 0) {
-        char stringStart = posOutput[posOutput.length() - 1];
 
-        if (stringStart != defPosOut) {
+        // character on right side of the positive output string
+        char stringEnd = posOutput[posOutput.length() - 1];
+
+        // if the right end of the positive string is not the default, we need to add the default boolean letter
+        if (stringEnd != defPosOut) {
             posOutput += defPosOut;
         } 
     }
 
-    // put together the output
+    // build our string output and return it
     string output = "[..." + negOutput + "<" + zeroOutput + ">" + posOutput + "...]";
 
     os << output;
